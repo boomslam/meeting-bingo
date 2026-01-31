@@ -58,7 +58,7 @@ export const CATEGORIES: Category[] = [
   {
     id: 'pm-bingo',
     name: 'Wesingo',
-    description: 'The construction-sales-snowcone PM from Austin',
+    description: 'The construction-sales-snowcone PM from Austin 🤠',
     icon: '🤠',
     words: [
       // Puns & Humor
