@@ -107,9 +107,6 @@ function App() {
       // Check if it's a valid category
       const validCategory = CATEGORIES.find(c => c.id === categoryParam);
       if (validCategory) {
-        // Clear URL param for cleaner sharing after load
-        window.history.replaceState({}, '', window.location.pathname);
-
         // Start fresh game with this category (ignore any persisted state)
         clearGameStorage();
         const newCard = generateCard(validCategory.id);
@@ -202,6 +199,8 @@ function App() {
 
   // Select category and generate card
   const handleSelectCategory = (categoryId: CategoryId) => {
+    // Update URL with category param for easy sharing
+    window.history.replaceState({}, '', `?category=${categoryId}`)
     setCategory(categoryId)
     const newCard = generateCard(categoryId)
     setCard(newCard)
