@@ -68,7 +68,7 @@ export function useKeyboardShortcuts({
         case '2':
         case '3':
         case '4':
-        case '5':
+        case '5': {
           event.preventDefault();
           const num = parseInt(event.key);
           if (pendingRow === null) {
@@ -80,6 +80,7 @@ export function useKeyboardShortcuts({
             setPendingRow(null);
           }
           break;
+        }
 
         default:
           // Clear pending row on any other key

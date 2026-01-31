@@ -248,6 +248,7 @@ function App() {
   }, [screen, stopListening, setScreen, setCard, setCategory, setFilledWords, setStartedAt])
 
   // Select square by row/col position (for keyboard)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSelectSquareByPosition = useCallback((row: number, col: number) => {
     if (!card || screen !== 'game') return
     const square = card.squares[row]?.[col]
