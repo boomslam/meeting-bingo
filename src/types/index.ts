@@ -1,7 +1,7 @@
 // =============================================
 // CATEGORIES
 // =============================================
-export type CategoryId = 'agile' | 'corporate' | 'tech' | 'pm-bingo';
+export type CategoryId = 'agile' | 'corporate' | 'tech' | 'pm-bingo' | 'slt-marketing';
 
 export interface Category {
   id: CategoryId;

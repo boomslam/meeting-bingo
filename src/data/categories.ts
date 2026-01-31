@@ -88,4 +88,30 @@ export const CATEGORIES: Category[] = [
       'Great Question', 'Action Item Assigned'
     ],
   },
+  {
+    id: 'slt-marketing',
+    name: 'SLT Marketing',
+    description: 'Sur La Table marketing team meetings',
+    icon: '👨‍🍳',
+    words: [
+      // General Marketing
+      'ROI', 'conversion', 'engagement', 'funnel', 'campaign',
+      'brand awareness', 'target audience', 'KPI', 'metrics', 'analytics',
+      'A/B test', 'CTR', 'impressions', 'reach', 'retention',
+      'acquisition', 'segmentation', 'persona', 'touchpoint', 'omnichannel',
+      // Retail-Specific
+      'SKU', 'inventory', 'merchandising', 'seasonal', 'foot traffic',
+      'basket size', 'comp sales', 'margin', 'markdown', 'sell-through',
+      'assortment', 'planogram', 'POS',
+      // Kitchen/Culinary
+      'mise en place', 'cookware', 'bakeware', 'culinary', 'cooking class',
+      'demonstration', 'chef', 'kitchen essentials', 'recipe',
+      // Sur La Table / Brand
+      'registry', 'e-commerce', 'in-store experience', 'hands-on',
+      // Brand Marketing
+      'brand voice', 'positioning', 'storytelling', 'value proposition',
+      'differentiation', 'messaging', 'creative brief', 'campaign launch',
+      'go-to-market', 'content strategy'
+    ],
+  },
 ];
