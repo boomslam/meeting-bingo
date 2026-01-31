@@ -7,7 +7,9 @@ import { detectWordsWithAliases } from './lib/wordDetector'
 import { checkForBingo } from './lib/bingoChecker'
 import { generateShareText, shareResult } from './lib/shareUtils'
 import { useSpeechRecognition } from './hooks/useSpeechRecognition'
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import { Toast } from './components/ui/Toast'
+import { HotkeyHelp } from './components/ui/HotkeyHelp'
 import { useLocalStorage, clearGameStorage, STORAGE_KEY } from './hooks/useLocalStorage'
 
 type Screen = 'landing' | 'category' | 'game' | 'win'
@@ -46,6 +48,7 @@ function App() {
   )
   const [startedAt, setStartedAtInternal] = useState<number | null>(persistedState.startedAt)
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({ message: '', visible: false })
+  const [showHotkeyHelp, setShowHotkeyHelp] = useState(false)
 
   // Wrapped setters that also update persisted state
   const setScreen = useCallback((newScreen: Screen | ((prev: Screen) => Screen)) => {
@@ -218,6 +221,50 @@ function App() {
       startListening(handleTranscript)
     }
   }
+
+  // Generate new card (same category)
+  const handleNewCard = useCallback(() => {
+    if (!category || screen !== 'game') return
+    const newCard = generateCard(category)
+    setCard(newCard)
+    setFilledWords(new Set())
+    setWinningLine(null)
+    setStartedAt(Date.now())
+  }, [category, screen, setCard, setFilledWords, setStartedAt])
+
+  // Back to category selection
+  const handleBackToCategories = useCallback(() => {
+    if (screen === 'game') {
+      stopListening()
+      clearGameStorage()
+      window.history.replaceState({}, '', window.location.pathname)
+      setScreen('category')
+      setCard(null)
+      setCategory(null)
+      setWinningLine(null)
+      setFilledWords(new Set())
+      setStartedAt(null)
+    }
+  }, [screen, stopListening, setScreen, setCard, setCategory, setFilledWords, setStartedAt])
+
+  // Select square by row/col position (for keyboard)
+  const handleSelectSquareByPosition = useCallback((row: number, col: number) => {
+    if (!card || screen !== 'game') return
+    const square = card.squares[row]?.[col]
+    if (square && !square.isFreeSpace) {
+      handleSquareClick(square)
+    }
+  }, [card, screen])
+
+  // Keyboard shortcuts
+  const { pendingRow } = useKeyboardShortcuts({
+    onToggleListening: isSupported ? handleToggleListening : undefined,
+    onNewCard: handleNewCard,
+    onBackToCategories: handleBackToCategories,
+    onSelectSquare: handleSelectSquareByPosition,
+    onToggleHelp: () => setShowHotkeyHelp(prev => !prev),
+    enabled: screen === 'game',
+  })
 
   // Manual square toggle
   const handleSquareClick = (square: BingoSquare) => {
@@ -454,7 +501,21 @@ function App() {
           >
             🔄 New Card
           </button>
+          <button
+            onClick={() => setShowHotkeyHelp(true)}
+            className="px-4 py-3 rounded-full font-semibold bg-gray-200 hover:bg-gray-300 text-gray-700 transition-all"
+            title="Keyboard shortcuts"
+          >
+            ⌨️
+          </button>
         </div>
+
+        {/* Keyboard shortcut indicator */}
+        {pendingRow !== null && (
+          <div className="mt-2 text-center text-sm text-indigo-600">
+            Row {pendingRow} selected — press 1-5 for column
+          </div>
+        )}
 
         {/* Privacy notice */}
         {isSupported && (
@@ -463,6 +524,12 @@ function App() {
           </p>
         )}
       </main>
+
+      {/* Hotkey help overlay */}
+      <HotkeyHelp
+        isVisible={showHotkeyHelp}
+        onClose={() => setShowHotkeyHelp(false)}
+      />
     </div>
   )
 }
